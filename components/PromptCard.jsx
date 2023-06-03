@@ -21,10 +21,16 @@ const PromptCard = ({post, handleTagClick, handleEdit, handleDelete}) => {
     setTimeout( () => setCopied(""), 3000)
   }
 
+  const goToProfile = () => {
+    if (session?.user.id === post.creator._id)
+        return router.push("/profile");
+    return router.push(`/profile/${post.creator._id}`)
+  }
+
   return (
     <div className="prompt_card">
       <div className="flex justify-between items-start gap-5">
-        <div className="flex-1 flex justify-star items-center gap-3 cursor-pointer">
+        <div className="flex-1 flex justify-star items-center gap-3 cursor-pointer" onClick={ goToProfile }>
           <Image
             src={post?.creator?.image}
             alt="user_image"
@@ -35,7 +41,7 @@ const PromptCard = ({post, handleTagClick, handleEdit, handleDelete}) => {
           <div className="flex flex-col">
             <h3 className="font-satoshi font-semibold text-gray-900">{post.creator.username}</h3>
             <p className="font-inter text-sm text-gray-500">
-              {post.creator.emai}
+              {post.creator.email}
             </p>
           </div>
         </div>

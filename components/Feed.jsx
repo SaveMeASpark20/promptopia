@@ -20,6 +20,9 @@ const PromptCardList = ({ data, handleTagClick}) => {
 const Feed = () => {
 
   const [searchText, setsearchText] = useState("");
+  const [searchTimeout, setSearchTimeout] = useState(null);
+  const [searchedResult, setSearchedResult] = useState([])
+
   const [posts, setPosts] = useState([]);
   
   useEffect(() => {
@@ -33,7 +36,33 @@ const Feed = () => {
     fetchPosts();
   },[])
 
+  const filteredPrompt = (searchtext) => {
+    const compareSearch = new RegExp(searchtext, "i");
+    console.log(searchtext)
+    return posts.filter((item) => 
+      compareSearch.test(item.creator.username) ||
+      compareSearch.test(item.prompt) ||
+      compareSearch.test(item.tag) 
+    )
+  }
+
   const handleSearchChange = (e) => {
+    clearTimeout(searchTimeout);
+    setsearchText(e.target.value)
+    
+    
+    setSearchTimeout(
+      setTimeout(() => {
+        const searchResult = filteredPrompt(e.target.value);
+        setSearchedResult(searchResult);
+      }, 500)
+    )
+  }
+
+  const handleTagClick = (tag) => {
+    setsearchText(tag);
+    const searchResultTag = filteredPrompt(tag);
+    setSearchedResult(searchResultTag);
   }
   
   return (
@@ -48,11 +77,16 @@ const Feed = () => {
           className='search_input peer'
         />
       </form>
-
-      <PromptCardList
-        data={posts}
-        handleTagClick ={() => {}}
-      />
+      {searchText ? (
+        <PromptCardList data={searchedResult}
+         handleTagClick={ handleTagClick }/>
+       ) : (
+        <PromptCardList
+          data={posts}
+          handleTagClick ={ handleTagClick }
+        />
+         )
+      }
     </section>
   )
 }
