@@ -7,7 +7,9 @@ import {useRouter} from 'next/navigation';
 import Profile from '@components/Profile';
 
 const MyProfile = () => {
-    const {data : session} = useSession();
+    const {data : session} = useSession({
+      required: true
+    });
     const router = useRouter();
     const [posts, setPosts] = useState([]);
 
@@ -20,7 +22,7 @@ const MyProfile = () => {
         }
       
         if(session?.user.id) fetchPosts();
-      },[])
+      },[session?.user.id])
 
     const handleEdit = (post) => {
       router.push(`/update-prompt?id=${post._id}`);
@@ -49,7 +51,7 @@ const MyProfile = () => {
   return (
     <Profile
         name="My"
-        desc="Welcome to your personalize profile page"
+        desc="Welcome to my profile page where you can see my Prompts"
         data={posts} 
         handleEdit={handleEdit}
         handleDelete={handleDelete}

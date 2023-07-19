@@ -1,36 +1,38 @@
 "use client";
 
 import {useState, useEffect} from 'react';
-import { useSession, useSearchParams } from 'next-auth/react'
-import {useRouter} from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 
 import Profile from '@components/Profile';
 
-const OtherProfile = () => {
-    const {data : session} = useSession();
-    const router = useRouter();
+const OtherProfile = ({params}) => {
     const [posts, setPosts] = useState([]);
 
     const searchParam = useSearchParams();
-    const param = searchParam.get('id');
+    const username = searchParam.get('name');
 
     useEffect(() => {
-        const fetchPosts = async () => {
-          const response = await fetch(`/api/users/${param}`);
+      const fetchPosts = async () => {
+        try{
+          const response = await fetch(`/api/users/${params.id}/posts`);
           const data = await response.json();
-          console.log(data);
           setPosts(data);
+          console.log(posts);
+
+        }catch(error){
+          console.log(error);
         }
-      
-        if(param) fetchPosts();
-      },[param])
+          
+      }
+        if(params?.id) fetchPosts();
+      },[params.id])
 
 
 
   return (
     <Profile
-        name= "name"
+        name= {posts[0]?.creator?.username}
         desc= "Welcome to your personalize profile page"
         data={posts} 
     /> 

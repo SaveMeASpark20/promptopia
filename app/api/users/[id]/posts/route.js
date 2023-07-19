@@ -12,6 +12,6 @@ export const GET = async (request, {params}) => {
             status:200
         })
     }catch(error) {
-        return new Response("Failed to fetch all prompts", { status: 500 })
+        return new Response("Failed to fetch user prompts", { status: 401 })
     }
 }

@@ -1,14 +1,18 @@
 'use client';
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, redirect } from 'next/navigation';
 
 import Form from '@components/Form';
 
 const CreatePrompt = () => {
 
-const router = useRouter();
-const { data : session } = useSession();
+  const router = useRouter();
+
+  const { data : session } = useSession({
+    required : true
+  })
+
 
   const [submitting, setSubmitting] = useState(false)
   const [post, setpost] = useState({
@@ -41,6 +45,7 @@ const { data : session } = useSession();
     }
 
   }
+
   return (
     <Form 
       type = "Create"

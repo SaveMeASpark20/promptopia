@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from "react"
+import { Suspense, useState } from "react"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
+
 
 
 
@@ -87,6 +88,7 @@ const PromptCard = ({post, handleTagClick, handleEdit, handleDelete}) => {
           )}
       </div>
     </div>
+  
   )
 }
 

@@ -21,7 +21,7 @@ const Feed = () => {
 
   const [searchText, setsearchText] = useState("");
   const [searchTimeout, setSearchTimeout] = useState(null);
-  const [searchedResult, setSearchedResult] = useState([])
+  const [searchedResult, setSearchedResult] = useState([]);
 
   const [posts, setPosts] = useState([]);
   
@@ -31,25 +31,23 @@ const Feed = () => {
       const data = await response.json();
       
       setPosts(data);
+      
     }
-  
+
     fetchPosts();
   },[])
 
-  const filteredPrompt = (searchtext) => {
-    const compareSearch = new RegExp(searchtext, "i");
-    console.log(searchtext)
-    return posts.filter((item) => 
-      compareSearch.test(item.creator.username) ||
-      compareSearch.test(item.prompt) ||
-      compareSearch.test(item.tag) 
-    )
+  //change the search to the text of the tag and filtered the post prompt
+  const handleTagClick = (tag) => {
+    setsearchText(tag);
+    const searchResultTag = filteredPrompt(tag);
+    setSearchedResult(searchResultTag);
   }
-
+  
+  
   const handleSearchChange = (e) => {
     clearTimeout(searchTimeout);
     setsearchText(e.target.value)
-    
     
     setSearchTimeout(
       setTimeout(() => {
@@ -59,12 +57,16 @@ const Feed = () => {
     )
   }
 
-  const handleTagClick = (tag) => {
-    setsearchText(tag);
-    const searchResultTag = filteredPrompt(tag);
-    setSearchedResult(searchResultTag);
-  }
   
+  const filteredPrompt = (searchtext) => {
+    const compareSearch = new RegExp(searchtext, "i");
+    console.log(searchtext)
+    return posts.filter((item) => 
+      compareSearch.test(item.creator.username) ||
+      compareSearch.test(item.prompt) ||
+      compareSearch.test(item.tag) 
+    )
+  }
   return (
     <section className='feed'>
       <form className='relative w-full flex-center'>
@@ -73,13 +75,14 @@ const Feed = () => {
           placeholder='Search for a tag or username'
           value={searchText}
           onChange= {handleSearchChange}
-          required
           className='search_input peer'
         />
       </form>
+
       {searchText ? (
-        <PromptCardList data={searchedResult}
-         handleTagClick={ handleTagClick }/>
+        <PromptCardList 
+          data={searchedResult}
+          handleTagClick={ handleTagClick }/>
        ) : (
         <PromptCardList
           data={posts}
@@ -91,4 +94,4 @@ const Feed = () => {
   )
 }
 
-export default Feed
+export default Feed;
